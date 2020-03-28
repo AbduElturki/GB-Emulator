@@ -1,16 +1,48 @@
+#include<inttypes.h>
 #ifndef LR35902_H
 #define LR35902_H
 
+/* Registers:
+ * The register in gameboy are 16 bit but they are split into two 8 bit reigsters
+ * except for the stack pointer and program_counter
+ * high refers to bits 15 ... 8
+ * low refers to bits 7 ... 0
+ */
+
+union Register {
+    uint16_t word;
+    struct {
+        uint8_t low;
+        uint8_t high;
+    };
+};
 
 class LR35902
 {
 public:
     LR35902();
 
+    Register AF;
+    Register BC;
+    Register DE;
+    Register HL;
+    Register SP;
+    Register PC;
+
 private:
     typedef void (LR35902::*mapping)();
     mapping instruct_map[256]; 
     mapping cb_map[256]; 
+
+    void IncrementPC(uint8_t steps);
+    void GetPC();
+
+    //LD
+    void Load(uint8_t& reg);
+    void Load(uint8_t& reg1, const uint8_t& reg2);
+    void Load(uint16_t& reg1, const uint16_t& reg2);
+
+    void LoadFromAddr(uint8_t reg);
 
     //Instruction set
     void NOP();
