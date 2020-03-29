@@ -1,4 +1,5 @@
 #include<inttypes.h>
+#include "../memory/mmu.h"
 #ifndef LR35902_H
 #define LR35902_H
 
@@ -21,6 +22,8 @@ class LR35902
 {
 public:
     LR35902();
+
+    MMU *mmu;
 
     Register AF;
     Register BC;

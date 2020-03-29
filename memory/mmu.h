@@ -9,6 +9,7 @@ public:
     MMU();
 private:
     uint8_t bios[0x100];
+    bool read_bios;
     union Memory
     {
         uint8_t address[0x10000];
@@ -27,6 +28,14 @@ private:
             uint8_t interrupt_flag;
         };
     };
+    Memory memory;
+
+public:
+
+    uint8_t read_byte(uint16_t address);
+    uint8_t read_word(uint16_t address); 
+
+    void write_byte(uint16_t address, uint8_t value);
 
 };
 

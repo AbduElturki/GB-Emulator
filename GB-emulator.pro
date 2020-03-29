@@ -18,7 +18,11 @@ SOURCES += \
         instruction.cpp \
         lr35902.cpp \
         main.cpp \
-        prefix_cb.cpp
+        memory/mmu.cpp \
+        prefix_cb.cpp \
+        processor/instruction.cpp \
+        processor/lr35902.cpp \
+        processor/prefix_cb.cpp
 
 TRANSLATIONS += \
     GB-emulator_en_GB.ts
@@ -29,4 +33,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    lr35902.h
+    lr35902.h \
+    memory/mmu.h \
+    processor/lr35902.h

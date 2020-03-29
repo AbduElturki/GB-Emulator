@@ -7,11 +7,13 @@ void LR35902::NOP()
 
 void LR35902::LD_BC_d16()
 {
+    this->BC.word = this->mmu->read_word(this->PC.word);
 }
 
 
 void LR35902::LD__BC__A()
 {
+    this->mmu->write_byte(this->PC.word,this->AF.high);
 }
 
 
