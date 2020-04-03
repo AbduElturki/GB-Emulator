@@ -19,26 +19,32 @@ void LR35902::LD__BC__A()
 
 void LR35902::INC_BC()
 {
+    this->BC.word += 1;
 }
 
 
 void LR35902::INC_B()
 {
+    this->BC.high += 1;
 }
 
 
 void LR35902::DEC_B()
 {
+    this->BC.high -= 1;
 }
 
 
 void LR35902::LD_B_d8()
 {
+    this->BC.high = this->mmu->read_word(this->PC.word);
 }
 
 
 void LR35902::RLCA()
 {
+    AF.low = (AF.high&0x80)?0x10:0;
+    AF.high = (AF.high<<1) | (AF.high>>7);
 }
 
 
