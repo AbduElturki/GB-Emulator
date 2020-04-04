@@ -37,7 +37,7 @@ void LR35902::DEC_B()
 
 void LR35902::LD_B_d8()
 {
-    this->BC.high = this->mmu->read_word(this->PC.word);
+    this->BC.high = this->mmu->read_byte(this->PC.word);
 }
 
 
@@ -50,6 +50,7 @@ void LR35902::RLCA()
 
 void LR35902::LD__a16__SP()
 {
+    this->mmu->write_word(this->PC.word,this->SP.word);
 }
 
 
