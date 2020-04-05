@@ -7,85 +7,102 @@ void LR35902::NOP()
 
 void LR35902::LD_BC_d16()
 {
-    this->BC.word = this->mmu->read_word(this->PC.word);
+    LoadFromMemory(BC.word);
 }
 
 
 void LR35902::LD__BC__A()
 {
-    this->mmu->write_byte(this->PC.word,this->AF.high);
+    LoadToMemory(AF.high,BC.word);
 }
 
 
 void LR35902::INC_BC()
 {
-    this->BC.word += 1;
+    BC.word += 1;
 }
 
 
 void LR35902::INC_B()
 {
-    this->BC.high += 1;
+    BC.high += 1;
 }
 
 
 void LR35902::DEC_B()
 {
-    this->BC.high -= 1;
+    BC.high -= 1;
 }
 
 
 void LR35902::LD_B_d8()
 {
-    this->BC.high = this->mmu->read_byte(this->PC.word);
+    LoadFromMemory(BC.high);
 }
 
 
 void LR35902::RLCA()
 {
-    AF.low = (AF.high&0x80)?0x10:0;
-    AF.high = (AF.high<<1) | (AF.high>>7);
+    if (AF.high == 0) AF.low = 0x80;
+    else
+    {
+        this->AF.low = (this->AF.high&0x80)?0x10:0;
+        this->AF.high = (this->AF.high<<1) | (this->AF.high>>7);
+    }
 }
 
 
 void LR35902::LD__a16__SP()
 {
-    this->mmu->write_word(this->PC.word,this->SP.word);
+    LoadToMemory(SP.word, mmu->ReadWord(PC.word));
+    PC.word += 2;
 }
 
 
 void LR35902::ADD_HL_BC()
 {
+    AddToHL(BC.word);
 }
 
 
 void LR35902::LD_A__BC_()
 {
+    LoadFromMemory(AF.high,BC.word);
 }
 
 
 void LR35902::DEC_BC()
 {
+    BC.word -= 1;
 }
 
 
 void LR35902::INC_C()
 {
+    BC.low += 1;
 }
 
 
 void LR35902::DEC_C()
 {
+    BC.low -= 1;
 }
 
 
 void LR35902::LD_C_d8()
 {
+    LoadFromMemory(BC.low);
 }
 
 
 void LR35902::RRCA()
 {
+    if(AF.high == 0) AF.low = 0x80;
+    else
+    {
+        AF.low = (AF.high&0x1)?0x10:0;
+        AF.high = (AF.high>>1) | ((AF.high&0x1)<<7);
+    }
 }
 
 
@@ -96,36 +113,48 @@ void LR35902::STOP_0()
 
 void LR35902::LD_DE_d16()
 {
+    LoadFromMemory(DE.word);
 }
 
 
 void LR35902::LD__DE__A()
 {
+    LoadFromMemory(AF.high,DE.word);
 }
 
 
 void LR35902::INC_DE()
 {
+    DE.word += 1;
 }
 
 
 void LR35902::INC_D()
 {
+    DE.high += 1;
 }
 
 
 void LR35902::DEC_D()
 {
+    DE.high += 1;
 }
 
 
 void LR35902::LD_D_d8()
 {
+    LoadFromMemory(DE.high);
 }
 
 
 void LR35902::RLA()
 {
+    if(AF.high == 0) AF.low = 0x80;
+    else
+    {
+        AF.low = (AF.high&0x80)?0x10:0;
+        AF.high = (AF.high << 1) | ((AF.low&0x10)?1:0 >> 4);
+    }
 }
 
 

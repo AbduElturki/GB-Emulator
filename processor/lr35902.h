@@ -40,12 +40,19 @@ private:
     void IncrementPC(uint8_t steps);
     void GetPC();
 
+    //Helper functions
     //LD
-    void Load(uint8_t& reg);
-    void Load(uint8_t& reg1, const uint8_t& reg2);
-    void Load(uint16_t& reg1, const uint16_t& reg2);
+    void LoadFromMemory(uint8_t& reg);
+    void LoadFromMemory(uint16_t& reg);
+    void LoadFromMemory(uint8_t& reg, uint16_t address);
+    void LoadFromMemory(uint16_t& reg, uint16_t address);
+    void LoadToMemory(uint8_t reg);
+    void LoadToMemory(uint16_t reg);
+    void LoadToMemory(uint8_t reg, uint16_t address);
+    void LoadToMemory(uint16_t reg, uint16_t address);
 
-    void LoadFromAddr(uint8_t reg);
+    //ALU
+    void AddToHL(uint16_t reg);
 
     //Instruction set
     void NOP();

@@ -30,7 +30,7 @@ MMU::MMU()
 }
 
 //TODO sort out shadow ram
-uint8_t MMU::read_byte(uint16_t address)
+uint8_t MMU::ReadByte(uint16_t address)
 {
     if ((MMU::read_bios) && (address <= 0xFF))
     {
@@ -39,12 +39,12 @@ uint8_t MMU::read_byte(uint16_t address)
     return MMU::memory.address[address]; 
 };
 
-uint8_t MMU::read_word(uint16_t address)
+uint8_t MMU::ReadWord(uint16_t address)
 {
-    return (this->read_byte(address) | (this->read_byte(address + 1) << 8));
+    return (this->ReadByte(address) | (this->ReadByte(address + 1) << 8));
 };
 
-void MMU::write_byte(uint16_t address, uint8_t value)
+void MMU::WriteByte(uint16_t address, uint8_t value)
 {
     this->memory.address[address] = value;
 };
