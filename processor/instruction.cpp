@@ -8,36 +8,42 @@ void LR35902::NOP()
 void LR35902::LD_BC_d16()
 {
     LoadFromMemory(BC.word);
+    machine_cycle = 3;
 }
 
 
 void LR35902::LD__BC__A()
 {
     LoadToMemory(AF.high,BC.word);
+    machine_cycle = 2;
 }
 
 
 void LR35902::INC_BC()
 {
     BC.word += 1;
+    machine_cycle = 2;
 }
 
 
 void LR35902::INC_B()
 {
     BC.high += 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::DEC_B()
 {
     BC.high -= 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::LD_B_d8()
 {
     LoadFromMemory(BC.high);
+    machine_cycle = 2;
 }
 
 
@@ -49,6 +55,7 @@ void LR35902::RLCA()
         this->AF.low = (this->AF.high&0x80)?0x10:0;
         this->AF.high = (this->AF.high<<1) | (this->AF.high>>7);
     }
+    machine_cycle = 1;
 }
 
 
@@ -56,42 +63,49 @@ void LR35902::LD__a16__SP()
 {
     LoadToMemory(SP.word, mmu->ReadWord(PC.word));
     PC.word += 2;
+    machine_cycle = 5;
 }
 
 
 void LR35902::ADD_HL_BC()
 {
     AddToHL(BC.word);
+    machine_cycle = 2;
 }
 
 
 void LR35902::LD_A__BC_()
 {
     LoadFromMemory(AF.high,BC.word);
+    machine_cycle = 2;
 }
 
 
 void LR35902::DEC_BC()
 {
     BC.word -= 1;
+    machine_cycle = 2;
 }
 
 
 void LR35902::INC_C()
 {
     BC.low += 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::DEC_C()
 {
     BC.low -= 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::LD_C_d8()
 {
     LoadFromMemory(BC.low);
+    machine_cycle = 2;
 }
 
 
@@ -103,133 +117,177 @@ void LR35902::RRCA()
         AF.low = (AF.high&0x1)?0x10:0;
         AF.high = (AF.high>>1) | ((AF.high&0x1)<<7);
     }
+    machine_cycle = 1;
 }
 
 
 void LR35902::STOP_0()
 {
+    machine_cycle = 1;
 }
 
 
 void LR35902::LD_DE_d16()
 {
     LoadFromMemory(DE.word);
+    machine_cycle = 3;
 }
 
 
 void LR35902::LD__DE__A()
 {
     LoadFromMemory(AF.high,DE.word);
+    machine_cycle = 2;
 }
 
 
 void LR35902::INC_DE()
 {
     DE.word += 1;
+    machine_cycle = 2;
 }
 
 
 void LR35902::INC_D()
 {
     DE.high += 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::DEC_D()
 {
     DE.high += 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::LD_D_d8()
 {
     LoadFromMemory(DE.high);
+    machine_cycle = 2;
 }
 
 
 void LR35902::RLA()
 {
-    if(AF.high == 0) AF.low = 0x80;
-    else
-    {
-        AF.low = (AF.high&0x80)?0x10:0;
-        AF.high = (AF.high << 1) | ((AF.low&0x10)?1:0 >> 4);
-    }
+    AF.low = (AF.high&0x80)?0x10:0;
+    AF.high = (AF.high << 1) | ((AF.low&0x10) >> 4);
+    machine_cycle = 1;
 }
 
 
 void LR35902::JR_r8()
 {
+    PC.word += (mmu->ReadByte(PC.word) + 1);
+    machine_cycle = 3;
 }
 
 
 void LR35902::ADD_HL_DE()
 {
+    AddToHL(DE.word);
+    machine_cycle = 2;
 }
 
 
 void LR35902::LD_A__DE_()
 {
+    LoadFromMemory(AF.high,DE.word);
+    machine_cycle = 2;
 }
 
 
 void LR35902::DEC_DE()
 {
+    DE.word -= 1;
+    machine_cycle = 2;
 }
 
 
 void LR35902::INC_E()
 {
+    DE.low += 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::DEC_E()
 {
+    DE.low -= 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::LD_E_d8()
 {
+    LoadFromMemory(DE.low);
+    machine_cycle = 2;
 }
 
 
 void LR35902::RRA()
 {
+    AF.low = (AF.high&0x80)?0x10:0;
+    AF.high = (AF.high >> 1) | ((AF.low&0x10) << 3);
+    machine_cycle = 1;
 }
 
 
 void LR35902::JR_NZ_r8()
 {
+    if((AF.low & 0x80) == 0)
+    {
+        PC.word += (mmu->ReadByte(PC.word) + 1);
+        machine_cycle = 3;
+    } 
+    else 
+    {
+        PC.word += 2;
+        machine_cycle = 2;
+    }
 }
 
 
 void LR35902::LD_HL_d16()
 {
+    LoadFromMemory(HL.word);
+    machine_cycle = 3;
 }
 
 
 void LR35902::LD__HL_PLUS___A()
 {
+    LoadFromMemory(AF.high,HL.word++);
+    machine_cycle = 2;
 }
 
 
 void LR35902::INC_HL()
 {
+    HL.word += 1;
+    machine_cycle = 2;
 }
 
 
 void LR35902::INC_H()
 {
+    HL.high += 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::DEC_H()
 {
+    HL.high -= 1;
+    machine_cycle = 1;
 }
 
 
 void LR35902::LD_H_d8()
 {
+    LoadFromMemory(HL.high);
+    machine_cycle = 2;
 }
 
 
@@ -240,6 +298,16 @@ void LR35902::DAA()
 
 void LR35902::JR_Z_r8()
 {
+    if(AF.low & 0x80)
+    {
+        PC.word += (mmu->ReadByte(PC.word) + 1);
+        machine_cycle = 3;
+    } 
+    else 
+    {
+        PC.word += 2;
+        machine_cycle = 2;
+    }
 }
 
 

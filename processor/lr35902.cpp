@@ -3,6 +3,7 @@
 LR35902::LR35902()
 {
     mmu = new MMU();
+    machine_cycle = 0;
     const mapping instruct_map[256] = 
     {
         &LR35902::NOP,

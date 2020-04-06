@@ -25,6 +25,8 @@ public:
 
     MMU *mmu;
 
+private:
+
     Register AF;
     Register BC;
     Register DE;
@@ -32,7 +34,8 @@ public:
     Register SP;
     Register PC;
 
-private:
+    uint8_t machine_cycle;
+
     typedef void (LR35902::*mapping)();
     mapping instruct_map[256]; 
     mapping cb_map[256]; 
