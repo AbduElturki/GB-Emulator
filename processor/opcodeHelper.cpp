@@ -45,13 +45,63 @@ void LR35902::LoadToMemory(uint16_t reg, uint16_t address)
     mmu->WriteWord(address, reg);
 }
 
+//Branch
+void LR35902::JumpRelative(bool condition)
+{
+    if(condition)
+    {
+        PC.word += (mmu->ReadByte(PC.word) + 1);
+        machine_cycle = 3;
+    } 
+    else 
+    {
+        PC.word += 2;
+        machine_cycle = 2;
+    }
+}
+
 //ALU
+void LR35902::IncrementRegister(uint8_t& reg)
+{
+    //Carry flag unaffected
+    AF.low &= 0x10;
+    AF.low |= (((reg&0xF) + 1) == 0x10)?0x20:0;
+    AF.low |= reg?0:0x80;
+    ++reg;
+    machine_cycle = 1;
+}
+
+void LR35902::IncrementRegister(uint16_t& reg)
+{
+    ++reg;
+    machine_cycle = 2;
+}
+
+void LR35902::DecrementRegister(uint8_t& reg)
+{
+    //Carry flag unaffected
+    AF.low &= 0x10;
+    AF.low |= 0x40;
+    --reg;
+    AF.low |= ((reg &0xF) == 0xF)?0x20:0;
+    AF.low |= reg?0:0x80;
+    machine_cycle = 1;
+}
+
+void LR35902::DecrementRegister(uint16_t& reg)
+{
+    --reg;
+    machine_cycle = 2;
+}
+
 void LR35902::AddToHL(uint16_t reg)
 {
+    //Zero flag unaffected
     AF.low &= 0x80; 
     //Half carry flag 
-    if((HL.word&0xFFF) + (reg&0xFFF) == 0x1000) AF.low |= 0x20;
+    AF.low |= ((HL.word&0xFFF) + (reg&0xFFF) == 0x1000)?0x20:0;
     HL.word += reg;
-    //carry/overflow flag 
-    if(HL.word < reg) AF.low |= 0x10;
+    //carry flag 
+    AF.low |= (HL.word < reg)?0x10:0;
+    machine_cycle = 2;
 }

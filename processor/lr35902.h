@@ -54,7 +54,14 @@ private:
     void LoadToMemory(uint8_t reg, uint16_t address);
     void LoadToMemory(uint16_t reg, uint16_t address);
 
+    //Branch
+    void JumpRelative(bool condition);
+
     //ALU
+    void IncrementRegister(uint8_t& reg);
+    void IncrementRegister(uint16_t& reg);
+    void DecrementRegister(uint8_t& reg);
+    void DecrementRegister(uint16_t& reg);
     void AddToHL(uint16_t reg);
 
     //Instruction set

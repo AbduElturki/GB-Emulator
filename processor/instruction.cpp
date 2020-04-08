@@ -53,8 +53,8 @@ void LR35902::RLCA()
     if (AF.high == 0) AF.low = 0x80;
     else
     {
-        this->AF.low = (this->AF.high&0x80)?0x10:0;
-        this->AF.high = (this->AF.high<<1) | (this->AF.high>>7);
+        AF.low = (AF.high&0x80)?0x10:0;
+        AF.high = (AF.high<<1) | (this->AF.high>>7);
     }
     machine_cycle = 1;
 }
@@ -237,16 +237,7 @@ void LR35902::RRA()
 
 void LR35902::JR_NZ_r8()
 {
-    if((AF.low & 0x80) == 0)
-    {
-        PC.word += (mmu->ReadByte(PC.word) + 1);
-        machine_cycle = 3;
-    } 
-    else 
-    {
-        PC.word += 2;
-        machine_cycle = 2;
-    }
+    JumpRelative((AF.low & 0x80) == 0);
 }
 
 
@@ -299,16 +290,7 @@ void LR35902::DAA()
 
 void LR35902::JR_Z_r8()
 {
-    if(AF.low & 0x80)
-    {
-        PC.word += (mmu->ReadByte(PC.word) + 1);
-        machine_cycle = 3;
-    } 
-    else 
-    {
-        PC.word += 2;
-        machine_cycle = 2;
-    }
+    JumpRelative(AF.low & 0x80);
 }
 
 
