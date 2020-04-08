@@ -22,22 +22,19 @@ void LR35902::LD__BC__A()
 
 void LR35902::INC_BC()
 {
-    BC.word += 1;
-    machine_cycle = 2;
+    IncrementRegister(BC.word); 
 }
 
 
 void LR35902::INC_B()
 {
-    BC.high += 1;
-    machine_cycle = 1;
+    IncrementRegister(BC.high);
 }
 
 
 void LR35902::DEC_B()
 {
-    BC.high -= 1;
-    machine_cycle = 1;
+    DecrementRegister(BC.high);
 }
 
 
@@ -84,22 +81,19 @@ void LR35902::LD_A__BC_()
 
 void LR35902::DEC_BC()
 {
-    BC.word -= 1;
-    machine_cycle = 2;
+    DecrementRegister(BC.word);
 }
 
 
 void LR35902::INC_C()
 {
-    BC.low += 1;
-    machine_cycle = 1;
+    IncrementRegister(BC.low);
 }
 
 
 void LR35902::DEC_C()
 {
-    BC.low -= 1;
-    machine_cycle = 1;
+    DecrementRegister(BC.low);
 }
 
 
@@ -144,22 +138,19 @@ void LR35902::LD__DE__A()
 
 void LR35902::INC_DE()
 {
-    DE.word += 1;
-    machine_cycle = 2;
+    IncrementRegister(DE.word);
 }
 
 
 void LR35902::INC_D()
 {
-    DE.high += 1;
-    machine_cycle = 1;
+    IncrementRegister(DE.high);
 }
 
 
 void LR35902::DEC_D()
 {
-    DE.high += 1;
-    machine_cycle = 1;
+    DecrementRegister(DE.high);
 }
 
 
@@ -180,8 +171,7 @@ void LR35902::RLA()
 
 void LR35902::JR_r8()
 {
-    PC.word += (mmu->ReadByte(PC.word) + 1);
-    machine_cycle = 3;
+    JumpRelative(true);
 }
 
 
@@ -201,22 +191,19 @@ void LR35902::LD_A__DE_()
 
 void LR35902::DEC_DE()
 {
-    DE.word -= 1;
-    machine_cycle = 2;
+    DecrementRegister(DE.word);
 }
 
 
 void LR35902::INC_E()
 {
-    DE.low += 1;
-    machine_cycle = 1;
+    IncrementRegister(DE.low);
 }
 
 
 void LR35902::DEC_E()
 {
-    DE.low -= 1;
-    machine_cycle = 1;
+    DecrementRegister(DE.low);
 }
 
 
@@ -257,22 +244,19 @@ void LR35902::LD__HL_PLUS___A()
 
 void LR35902::INC_HL()
 {
-    HL.word += 1;
-    machine_cycle = 2;
+    IncrementRegister(HL.word);
 }
 
 
 void LR35902::INC_H()
 {
-    HL.high += 1;
-    machine_cycle = 1;
+    IncrementRegister(HL.high);
 }
 
 
 void LR35902::DEC_H()
 {
-    HL.high -= 1;
-    machine_cycle = 1;
+    DecrementRegister(HL.high);
 }
 
 
@@ -310,22 +294,19 @@ void LR35902::LD_A__HL_PLUS__()
 
 void LR35902::DEC_HL()
 {
-    HL.word -= 1;
-    machine_cycle = 2;
+    DecrementRegister(HL.word);
 }
 
 
 void LR35902::INC_L()
 {
-    HL.low += 1;
-    machine_cycle = 1;
+    IncrementRegister(HL.low);
 }
 
 
 void LR35902::DEC_L()
 {
-    HL.low -= 1;
-    machine_cycle = 1;
+    DecrementRegister(HL.low);
 }
 
 
@@ -338,21 +319,13 @@ void LR35902::LD_L_d8()
 
 void LR35902::CPL()
 {
+//TODO
 }
 
 
 void LR35902::JR_NC_r8()
 {
-    if((AF.low & 0x10) == 0)
-    {
-        PC.word += (mmu->ReadByte(PC.word) + 1);
-        machine_cycle = 3;
-    } 
-    else 
-    {
-        PC.word += 2;
-        machine_cycle = 2;
-    }
+    JumpRelative((AF.low & 0x10) == 0);
 }
 
 
@@ -372,8 +345,7 @@ void LR35902::LD__HL_MINUS___A()
 
 void LR35902::INC_SP()
 {
-    SP.word += 1;
-    machine_cycle = 2;
+    IncrementRegister(SP.word);
 }
 
 
@@ -399,6 +371,7 @@ void LR35902::SCF()
 
 void LR35902::JR_C_r8()
 {
+    JumpRelative(AF.low & 0x10);
 }
 
 
