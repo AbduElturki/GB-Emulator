@@ -53,6 +53,7 @@ private:
     void LoadToMemory(uint16_t reg);
     void LoadToMemory(uint8_t reg, uint16_t address);
     void LoadToMemory(uint16_t reg, uint16_t address);
+    void LoadFromRegister(uint8_t &reg_1, uint8_t &reg_2);
 
     //Branch
     void JumpRelative(bool condition);
@@ -63,6 +64,22 @@ private:
     void DecrementRegister(uint8_t& reg);
     void DecrementRegister(uint16_t& reg);
     void AddToHL(uint16_t reg);
+    void AddToA(uint8_t reg);
+    void AddToA(uint16_t address);
+    void AddCarryToA(uint8_t reg);
+    void AddCarryToA(uint16_t address);
+    void SubFromA(uint8_t reg);
+    void SubFromA(uint16_t address);
+    void SubCarryFromA(uint8_t reg);
+    void SubCarryFromA(uint16_t address);
+    void AndWithA(uint8_t reg);
+    void AndWithA(uint16_t address);
+    void XorWithA(uint8_t reg);
+    void XorWithA(uint16_t address);
+    void OrWithA(uint8_t reg);
+    void OrWithA(uint16_t address);
+    void CompareToA(uint8_t reg);
+    void CompareToA(uint16_t address);
 
     //Instruction set
     void NOP();
