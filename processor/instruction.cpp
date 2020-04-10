@@ -9,14 +9,12 @@ void LR35902::NOP()
 void LR35902::LD_BC_d16()
 {
     LoadFromMemory(BC.word);
-    machine_cycle = 3;
 }
 
 
 void LR35902::LD__BC__A()
 {
     LoadToMemory(AF.high,BC.word);
-    machine_cycle = 2;
 }
 
 
@@ -41,7 +39,6 @@ void LR35902::DEC_B()
 void LR35902::LD_B_d8()
 {
     LoadFromMemory(BC.high);
-    machine_cycle = 2;
 }
 
 
@@ -59,7 +56,7 @@ void LR35902::RLCA()
 
 void LR35902::LD__a16__SP()
 {
-    LoadToMemory(SP.word, mmu->ReadWord(PC.word));
+    mmu->WriteWord(SP.word, mmu->ReadWord(PC.word));
     PC.word += 2;
     machine_cycle = 5;
 }
@@ -68,14 +65,12 @@ void LR35902::LD__a16__SP()
 void LR35902::ADD_HL_BC()
 {
     AddToHL(BC.word);
-    machine_cycle = 2;
 }
 
 
 void LR35902::LD_A__BC_()
 {
     LoadFromMemory(AF.high,BC.word);
-    machine_cycle = 2;
 }
 
 
@@ -100,7 +95,6 @@ void LR35902::DEC_C()
 void LR35902::LD_C_d8()
 {
     LoadFromMemory(BC.low);
-    machine_cycle = 2;
 }
 
 
@@ -125,14 +119,12 @@ void LR35902::STOP_0()
 void LR35902::LD_DE_d16()
 {
     LoadFromMemory(DE.word);
-    machine_cycle = 3;
 }
 
 
 void LR35902::LD__DE__A()
 {
-    LoadFromMemory(AF.high,DE.word);
-    machine_cycle = 2;
+    LoadToMemory(AF.high,DE.word);
 }
 
 
@@ -157,7 +149,6 @@ void LR35902::DEC_D()
 void LR35902::LD_D_d8()
 {
     LoadFromMemory(DE.high);
-    machine_cycle = 2;
 }
 
 
@@ -178,14 +169,12 @@ void LR35902::JR_r8()
 void LR35902::ADD_HL_DE()
 {
     AddToHL(DE.word);
-    machine_cycle = 2;
 }
 
 
 void LR35902::LD_A__DE_()
 {
     LoadFromMemory(AF.high,DE.word);
-    machine_cycle = 2;
 }
 
 
@@ -210,7 +199,6 @@ void LR35902::DEC_E()
 void LR35902::LD_E_d8()
 {
     LoadFromMemory(DE.low);
-    machine_cycle = 2;
 }
 
 
@@ -231,14 +219,12 @@ void LR35902::JR_NZ_r8()
 void LR35902::LD_HL_d16()
 {
     LoadFromMemory(HL.word);
-    machine_cycle = 3;
 }
 
 
 void LR35902::LD__HL_PLUS___A()
 {
     LoadFromMemory(AF.high,HL.word++);
-    machine_cycle = 2;
 }
 
 
@@ -263,7 +249,6 @@ void LR35902::DEC_H()
 void LR35902::LD_H_d8()
 {
     LoadFromMemory(HL.high);
-    machine_cycle = 2;
 }
 
 
@@ -281,14 +266,12 @@ void LR35902::JR_Z_r8()
 void LR35902::ADD_HL_HL()
 {
     AddToHL(HL.word);
-    machine_cycle = 2;
 }
 
 
 void LR35902::LD_A__HL_PLUS__()
 {
     LoadFromMemory(AF.high,HL.word++);
-    machine_cycle = 2;
 }
 
 
@@ -313,7 +296,6 @@ void LR35902::DEC_L()
 void LR35902::LD_L_d8()
 {
     LoadToMemory(HL.low);
-    machine_cycle = 2;
 }
 
 
