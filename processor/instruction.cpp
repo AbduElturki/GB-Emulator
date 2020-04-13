@@ -1182,146 +1182,179 @@ void LR35902::CP_A()
 
 void LR35902::RET_NZ()
 {
+    ReturnFunc((AF.low & 0x80) == 0);
 }
 
 
 void LR35902::POP_BC()
 {
+    PopRegister(BC.word);
 }
 
 
 void LR35902::JP_NZ_a16()
 {
+    Jump((AF.low & 0x80) == 0);
 }
 
 
 void LR35902::JP_a16()
 {
+    Jump(true);
 }
 
 
 void LR35902::CALL_NZ_a16()
 {
+    Call((AF.low & 0x80) == 0);
 }
 
 
 void LR35902::PUSH_BC()
 {
+    PushRegister(BC.word);
 }
 
 
 void LR35902::ADD_A_d8()
 {
+    AddToA(PC.word);
+    PC.word += 1;
 }
 
 
 void LR35902::RST_00H()
 {
+    Restart(0x00);
 }
 
 
 void LR35902::RET_Z()
 {
+    ReturnFunc(AF.low & 0x80);
 }
 
 
 void LR35902::RET()
 {
+    ReturnFunc(true);
 }
 
 
 void LR35902::JP_Z_a16()
 {
+    Jump(AF.low & 0x80);
 }
 
 
 void LR35902::PREFIX_CB()
 {
+    //TODO
 }
 
 
 void LR35902::CALL_Z_a16()
 {
+    Call(AF.low & 0x80);
 }
 
 
 void LR35902::CALL_a16()
 {
+    Call(true);
 }
 
 
 void LR35902::ADC_A_d8()
 {
+    AddCarryToA(PC.word);
+    PC.word += 2;
 }
 
 
 void LR35902::RST_08H()
 {
+    Restart(0x08);
 }
 
 
 void LR35902::RET_NC()
 {
+    ReturnFunc((AF.low & 0x10) == 0);
 }
 
 
 void LR35902::POP_DE()
 {
+    PopRegister(DE.word);
 }
 
 
 void LR35902::JP_NC_a16()
 {
+    Jump((AF.low & 0x10) == 0);
 }
 
 
 void LR35902::CALL_NC_a16()
 {
+    Call((AF.low & 0x10) == 0);
 }
 
 
 void LR35902::PUSH_DE()
 {
+    PushRegister(DE.word);
 }
 
 
 void LR35902::SUB_d8()
 {
+    SubFromA(PC.word);
+    PC.word += 2;
 }
 
 
 void LR35902::RST_10H()
 {
+    Restart(0x10);
 }
 
 
 void LR35902::RET_C()
 {
+    ReturnFunc(AF.low & 0x10);
 }
 
 
 void LR35902::RETI()
 {
+    //TODO
 }
 
 
 void LR35902::JP_C_a16()
 {
+    Jump(AF.low & 0x10);
 }
 
 
 void LR35902::CALL_C_a16()
 {
+    Call(AF.low & 0x10);
 }
 
 
 void LR35902::SBC_A_d8()
 {
+    SubCarryFromA(PC.word);
+    PC.word += 2;
 }
 
 
 void LR35902::RST_1_8H()
 {
+    Call(0x18);
 }
 
 

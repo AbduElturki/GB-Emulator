@@ -54,9 +54,15 @@ private:
     void LoadToMemory(uint8_t reg, uint16_t address);
     void LoadToMemory(uint16_t reg, uint16_t address);
     void LoadFromRegister(uint8_t &reg_1, uint8_t &reg_2);
+    void PopRegister(uint16_t& reg);
+    void PushRegister(uint16_t reg);
+    void Restart(uint16_t address);
 
     //Branch
     void JumpRelative(bool condition);
+    void Jump(bool condition);
+    void Call(bool condition);
+    void ReturnFunc(bool condition);
 
     //ALU
     void IncrementRegister(uint8_t& reg);

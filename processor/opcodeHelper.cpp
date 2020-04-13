@@ -59,17 +59,90 @@ void LR35902::LoadFromRegister(uint8_t& reg_1, uint8_t& reg_2)
     machine_cycle = 1;
 }
 
+void LR35902::PopRegister(uint16_t& reg)
+{
+    reg = mmu->ReadWord(SP.word);
+    SP.word += 2;
+    machine_cycle = 3;
+}
+
+void LR35902::PushRegister(uint16_t reg)
+{
+    SP.word -= 3;
+    mmu->WriteWord(SP.word, reg);
+}
+
+void LR35902::Restart(uint16_t address)
+{
+    SP.word -= 2;
+    mmu->WriteWord(SP.word,PC.word);
+    PC.word = address;
+    machine_cycle = 4;
+}
+
 //Branch
 void LR35902::JumpRelative(bool condition)
 {
+    //TODO validate this...
+    //There are some disagreement in some docs on how JR works...
+    //Some believe that if the condition is met it should take 4 machine cycle
+    //but I think they are confusing JP with JR.
+    //Also I might need to convert the unsigned numbers to signed.
     if(condition)
     {
-        PC.word += (mmu->ReadByte(PC.word) + 1);
+        PC.word += (mmu->ReadWord(PC.word) + 1);
         machine_cycle = 3;
     } 
     else 
     {
         PC.word += 2;
+        machine_cycle = 2;
+    }
+}
+
+void LR35902::Jump(bool condition)
+{
+    if(condition)
+    {
+        PC.word = mmu->ReadWord(PC.word);
+        machine_cycle = 4;
+    } 
+    else 
+    {
+        PC.word += 2;
+        machine_cycle = 3;
+    }
+
+}
+
+void LR35902::Call(bool condition)
+{
+    if(condition)
+    {
+        uint16_t nn = mmu->ReadWord(PC.word);
+        PC.word += 2;
+        SP.word -= 2;
+        mmu->WriteWord(SP.word,PC.word);
+        PC.word = nn;
+        machine_cycle = 6;
+    }
+    else
+    {
+        PC.word += 2;
+        machine_cycle = 3;
+    }
+}
+
+void LR35902::ReturnFunc(bool condition)
+{
+    if(condition)
+    {
+        PC.word = mmu->ReadWord(SP.word);
+        SP.word += 2;
+        machine_cycle = 5;
+    }
+    else
+    {
         machine_cycle = 2;
     }
 }
@@ -149,7 +222,7 @@ void LR35902::AddCarryToA(uint8_t reg)
 {
     uint8_t carry = AF.low>>4;
     //Half carry flag
-    AF.low = ((((AF.high&0xF) + (reg&0xF) + carry ) &0x10) == 0x10)?0x20:0;
+    AF.low = ((((AF.high&0xF) + (reg&0xF) + carry )&0x10) == 0x10)?0x20:0;
     AF.high += reg;
     //carry flag
     AF.low |= (AF.high < reg)?0x10:0;
@@ -163,7 +236,7 @@ void LR35902::AddCarryToA(uint16_t address)
     uint8_t carry = AF.low>>4;
     uint8_t nn = mmu->ReadByte(address);
     //Half carry flag
-    AF.low = ((((AF.high&0xF) + (nn&0xF) + carry) & 0x10) == 0x10)?0x20:0;
+    AF.low = ((((AF.high&0xF) + (nn&0xF) + carry)&0x10) == 0x10)?0x20:0;
     AF.high += (nn + carry);
     //carry flag
     AF.low |= (AF.high < nn)?0x10:0;
