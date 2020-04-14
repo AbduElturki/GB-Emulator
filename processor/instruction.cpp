@@ -248,13 +248,21 @@ void LR35902::LD_H_d8()
 
 void LR35902::DAA()
 {
+    /*
+     This instruction adjusts register A so that the  correct representation 
+     of Binary Coded Decimal (BCD)  is obtained.
+     */
+
+    //Check if N flag equals to 0
     if (!(AF.low&0x40))
     {
+        //Check carry flag
         if ((AF.low&0x10)||(AF.high>0x99))
         {
             AF.high+=0x60;
-            AF.low |= 0x10;
+            AF.low |= 0x10; //Set carry flag if it is reset 
         }
+        //Check half carry flag
         if ((AF.low&0x20)||((AF.high&0x0F)>0x09)) AF.high+=0x6;
     }
     else
@@ -262,7 +270,9 @@ void LR35902::DAA()
         if (AF.low&0x10) AF.high-=0x60;
         if (AF.low&0x20) AF.high-=0x6;
     }
-    //TODO Flags
+
+    AF.low &= 0x5F; //Reset only half carry
+    AF.low |= AF.high?0:0x80; //Set Z flag if it is reg A is 0
 }
 
 
@@ -421,6 +431,7 @@ void LR35902::LD_A_d8()
 
 void LR35902::CCF()
 {
+    //Complement carry flag
     AF.low = (AF.low & 0x80) | ((!AF.low)&0x10);
     machine_cycle = 1;
 }
