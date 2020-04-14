@@ -53,7 +53,7 @@ void LR35902::RLCA()
 
 void LR35902::LD__a16__SP()
 {
-    mmu->WriteWord(SP.word, mmu->ReadWord(PC.word));
+    mmu->WriteWord(mmu->ReadWord(PC.word), SP.word);
     PC.word += 2;
     machine_cycle = 5;
 }
@@ -248,7 +248,21 @@ void LR35902::LD_H_d8()
 
 void LR35902::DAA()
 {
-//TODO
+    if (!(AF.low&0x40))
+    {
+        if ((AF.low&0x10)||(AF.high>0x99))
+        {
+            AF.high+=0x60;
+            AF.low |= 0x10;
+        }
+        if ((AF.low&0x20)||((AF.high&0x0F)>0x09)) AF.high+=0x6;
+    }
+    else
+    {
+        if (AF.low&0x10) AF.high-=0x60;
+        if (AF.low&0x20) AF.high-=0x6;
+    }
+    //TODO Flags
 }
 
 
@@ -407,7 +421,8 @@ void LR35902::LD_A_d8()
 
 void LR35902::CCF()
 {
-    //TODO
+    AF.low = (AF.low & 0x80) | ((!AF.low)&0x10);
+    machine_cycle = 1;
 }
 
 
@@ -1218,8 +1233,7 @@ void LR35902::PUSH_BC()
 
 void LR35902::ADD_A_d8()
 {
-    AddToA(PC.word);
-    PC.word += 1;
+    AddToA(PC.word++);
 }
 
 
@@ -1267,8 +1281,7 @@ void LR35902::CALL_a16()
 
 void LR35902::ADC_A_d8()
 {
-    AddCarryToA(PC.word);
-    PC.word += 2;
+    AddCarryToA(PC.word++);
 }
 
 
@@ -1310,8 +1323,7 @@ void LR35902::PUSH_DE()
 
 void LR35902::SUB_d8()
 {
-    SubFromA(PC.word);
-    PC.word += 2;
+    SubFromA(PC.word++);
 }
 
 
@@ -1347,8 +1359,7 @@ void LR35902::CALL_C_a16()
 
 void LR35902::SBC_A_d8()
 {
-    SubCarryFromA(PC.word);
-    PC.word += 2;
+    SubCarryFromA(PC.word++);
 }
 
 
@@ -1360,123 +1371,170 @@ void LR35902::RST_1_8H()
 
 void LR35902::LDH__a8__A()
 {
+    uint8_t n = mmu->ReadByte(PC.word++);
+    mmu->WriteByte((0xFF00|n),AF.high);
+    machine_cycle = 3;
 }
 
 
 void LR35902::POP_HL()
 {
+    PopRegister(HL.word);
 }
 
 
 void LR35902::LD__C__A()
 {
+    LoadToMemory(AF.high,(0xFF00|BC.low));
 }
 
 
 void LR35902::PUSH_HL()
 {
+    PushRegister(HL.word);
 }
 
 
 void LR35902::AND_d8()
 {
+    AndWithA(PC.word++);
 }
 
 
 void LR35902::RST_20H()
 {
+    Restart(0x20);
 }
 
 
 void LR35902::ADD_SP_r8()
 {
+    uint8_t n = mmu->ReadByte(PC.word++);
+    //Half carry
+    AF.low = (((SP.word&0xFFF) + (n&0xFFF) & 0x1000) == 0x1000)?0x20:0;
+    SP.word += n;
+    //Carry
+    AF.low |= (SP.word < n)?0x10:0;
+    machine_cycle = 4;
 }
 
 
 void LR35902::JP__HL_()
 {
+    PC.word = mmu->ReadWord(HL.word);
+    machine_cycle = 1;
 }
 
 
 void LR35902::LD__a16__A()
 {
+    mmu->WriteByte(mmu->ReadByte(PC.word), AF.high);
+    PC.word += 2;
+    machine_cycle = 4;
 }
 
 
 void LR35902::XOR_d8()
 {
+    XorWithA(PC.word++);
 }
 
 
 void LR35902::RST_2_8H()
 {
+    Restart(0x28);
 }
 
 
 void LR35902::LDH_A__a8_()
 {
+    uint8_t n = mmu->ReadByte(PC.word++);
+    AF.high = mmu->ReadByte(0xFF00|n);
+    machine_cycle = 3;
 }
 
 
 void LR35902::POP_AF()
 {
+    PopRegister(AF.word);
 }
 
 
 void LR35902::LD_A__C_()
 {
+    LoadFromMemory(AF.high,(0xFF00|BC.low));
 }
 
 
 void LR35902::DI()
 {
+    //TODO
 }
 
 
 void LR35902::PUSH_AF()
 {
+    PushRegister(AF.word);
 }
 
 
 void LR35902::OR_d8()
 {
+    OrWithA(PC.word++);
 }
 
 
 void LR35902::RST_30H()
 {
+    Restart(0x30);
 }
 
 
 void LR35902::LD_HL_SP_PLUS_r8()
 {
+    uint8_t n = mmu->ReadByte(PC.word++);
+    //Half carry
+    AF.low = (((SP.word&0xFFF) + (n&0xFFF) & 0x1000) == 0x1000)?0x20:0;
+    HL.word = SP.word + n;
+    //Carry
+    AF.low |= (HL.word < SP.word)?0x10:0;
+    machine_cycle = 3;
 }
 
 
 void LR35902::LD_SP_HL()
 {
+    SP.word = HL.word;
+    machine_cycle = 2;
 }
 
 
 void LR35902::LD_A__a16_()
 {
+    uint8_t nn = mmu->ReadWord(PC.word);
+    PC.word += 2;
+    LoadFromMemory(AF.high,nn);
 }
 
 
 void LR35902::EI()
 {
+    //TODO
 }
 
 
 void LR35902::CP_d8()
 {
+    CompareToA(PC.word++);
 }
 
 
 void LR35902::RST_38H()
 {
+    Restart(0x38);
 }
 
 void LR35902::INVALID()
 {
+    //TODO
 }
