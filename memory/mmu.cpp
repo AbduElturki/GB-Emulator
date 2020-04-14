@@ -46,5 +46,11 @@ uint8_t MMU::ReadWord(uint16_t address)
 
 void MMU::WriteByte(uint16_t address, uint8_t value)
 {
-    this->memory.address[address] = value;
+    memory.address[address] = value;
 };
+
+void MMU::WriteWord(uint16_t address, uint16_t value)
+{
+    WriteByte(address, (value & 0xFF));
+    WriteByte(address + 1, (value >> 8));
+}
