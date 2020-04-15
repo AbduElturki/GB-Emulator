@@ -29,7 +29,6 @@ MMU::MMU()
     };
 }
 
-//TODO sort out shadow ram
 uint8_t MMU::ReadByte(uint16_t address)
 {
     if ((MMU::read_bios) && (address <= 0xFF))
@@ -46,7 +45,25 @@ uint8_t MMU::ReadWord(uint16_t address)
 
 void MMU::WriteByte(uint16_t address, uint8_t value)
 {
-    memory.address[address] = value;
+    /*
+    The addresses E000-FE00 appear to access the internal RAM the same as 
+    C000-DE00. (i.e. If you write a byte toaddress 0xE000 it will appear 
+    at 0xC000 and 0xE000.Similarly, writing a byte to 0xC000 will appear 
+    at 0xC000 and 0xE000.)
+
+    0xC00 - 0xE000 = 0x2000
+    */
+    if ((address >= 0xC00) && (address <= 0xDE00))
+    {
+        memory.address[address] = value;
+        memory.address[address + 0x2000] = value;
+    } 
+    else if ((address >= 0xE000) && (address <=0xFE00))
+    {
+        memory.address[address] = value;
+        memory.address[address - 0x2000] = value;
+    } 
+    else memory.address[address] = value;
 };
 
 void MMU::WriteWord(uint16_t address, uint16_t value)
