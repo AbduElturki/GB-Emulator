@@ -70,6 +70,7 @@ void LR35902::PushRegister(uint16_t reg)
 {
     SP.word -= 3;
     mmu->WriteWord(SP.word, reg);
+    machine_cycle = 4;
 }
 
 void LR35902::Restart(uint16_t address)
