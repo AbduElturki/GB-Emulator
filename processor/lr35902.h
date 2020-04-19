@@ -87,6 +87,12 @@ private:
     void CompareToA(uint8_t reg);
     void CompareToA(uint16_t address);
 
+    //Rotate
+    void RotateLeftCarry(uint8_t& reg);
+    void RotateRightCarry(uint8_t& reg);
+    void RotateLeft(uint8_t& reg);
+    void RotateRight(uint8_t& reg);
+
     //Instruction set
     void NOP();
     void LD_BC_d16();

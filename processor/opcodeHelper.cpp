@@ -356,3 +356,36 @@ void LR35902::CompareToA(uint16_t address)
     AF.low |= (AF.high < nn)?0x10:0;
     machine_cycle = 2;
 }
+
+//Rotate
+void LR35902::RotateLeftCarry(uint8_t& reg)
+{
+    reg = (reg << 1) | (reg >> 7);
+    AF.low = (reg&0x1)?0x10:0;
+    if(reg) AF.low = 0x80;
+    machine_cycle = 2;
+}
+
+void LR35902::RotateRightCarry(uint8_t& reg)
+{
+    reg = (reg >> 1) | (reg << 7);
+    AF.low = (reg&0x80)?0x10:0;
+    if(reg) AF.low = 0x80;
+    machine_cycle = 2;
+}
+
+void LR35902::RotateLeft(uint8_t& reg)
+{
+    AF.low = (reg&0x80)?0x10:0;
+    reg = (reg << 1) | ((AF.low&0x10) >> 4);
+    if(reg) AF.low |= 0x80;
+    machine_cycle = 2;
+}
+
+void LR35902::RotateRight(uint8_t& reg)
+{
+    AF.low = (reg&0x1)?0x10:0;
+    reg = (reg >> 1) | ((AF.low&0x10) << 3);
+    if(reg) AF.low |= 0x80;
+    machine_cycle = 2;
+}
