@@ -252,7 +252,9 @@ void LR35902::SLA__HL_()
 {
     uint8_t n = mmu->ReadByte(HL.word);
     AF.low = (n&0x80)?0x10:0;
-    mmu->WriteByte(HL.word, (n << 1));
+    n = (n << 1);
+    AF.low |= n?0:0x80;
+    mmu->WriteByte(HL.word,n);
     machine_cycle = 4;
 }
 
@@ -265,121 +267,160 @@ void LR35902::SLA_A()
 
 void LR35902::SRA_B()
 {
+    ShiftRightNoChange(BC.high);
 }
 
 
 void LR35902::SRA_C()
 {
+    ShiftRightNoChange(BC.low);
 }
 
 
 void LR35902::SRA_D()
 {
+    ShiftRightNoChange(DE.high);
 }
 
 
 void LR35902::SRA_E()
 {
+    ShiftRightNoChange(DE.low);
 }
 
 
 void LR35902::SRA_H()
 {
+    ShiftRightNoChange(HL.high);
 }
 
 
 void LR35902::SRA_L()
 {
+    ShiftRightNoChange(HL.low);
 }
 
 
 void LR35902::SRA__HL_()
 {
+    uint8_t n = mmu->ReadByte(HL.word);
+    AF.low = (n&0x1)?0x10:0;
+    n = (n&0x80) | (n >> 1);
+    AF.low |= n?0:0x80;
+    mmu->WriteByte(HL.word,n);
+    machine_cycle = 4;
 }
 
 
 void LR35902::SRA_A()
 {
+    ShiftRightNoChange(AF.high);
 }
 
 
 void LR35902::SWAP_B()
 {
+    Swap(BC.high);
 }
 
 
 void LR35902::SWAP_C()
 {
+    Swap(BC.low);
 }
 
 
 void LR35902::SWAP_D()
 {
+    Swap(DE.high);
 }
 
 
 void LR35902::SWAP_E()
 {
+    Swap(DE.low);
 }
 
 
 void LR35902::SWAP_H()
 {
+    Swap(HL.high);
 }
 
 
 void LR35902::SWAP_L()
 {
+    Swap(HL.low);
 }
 
 
 void LR35902::SWAP__HL_()
 {
+    uint8_t n = mmu->ReadByte(HL.word);
+    AF.low = n?0:0x80;
+    n = ((n&0xF0) >> 4) | ((n&0xF) << 4);
+    n |= n?0:0x80;
+    mmu->WriteByte(HL.word,n);
+    machine_cycle = 4;
 }
 
 
 void LR35902::SWAP_A()
 {
+    Swap(AF.high);
 }
 
 
 void LR35902::SRL_B()
 {
+    ShiftRight(BC.high);
 }
 
 
 void LR35902::SRL_C()
 {
+    ShiftRight(BC.low);
 }
 
 
 void LR35902::SRL_D()
 {
+    ShiftRight(DE.high);
 }
 
 
 void LR35902::SRL_E()
 {
+    ShiftRight(DE.low);
 }
 
 
 void LR35902::SRL_H()
 {
+    ShiftRight(HL.high);
 }
 
 
 void LR35902::SRL_L()
 {
+    ShiftRight(HL.low);
 }
 
 
 void LR35902::SRL__HL_()
 {
+    uint8_t n = mmu->ReadByte(HL.word);
+    AF.low = (n&0x1)?0x10:0;
+    n = n >> 1;
+    AF.low |= n?0:0x80;
+    mmu->WriteByte(HL.word,n);
+    machine_cycle = 4;
 }
 
 
 void LR35902::SRL_A()
 {
+    ShiftRight(AF.high);
 }
 
 

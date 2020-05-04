@@ -94,6 +94,11 @@ private:
     void RotateRight(uint8_t& reg);
     void ShiftLeft(uint8_t& reg);
     void ShiftRightNoChange(uint8_t& reg);
+    void ShiftRight(uint8_t& reg);
+    void Swap(uint8_t& reg);
+
+    //Bit operations
+    void BitOperator(uint8_t& reg, int bit);
 
     //Instruction set
     void NOP();

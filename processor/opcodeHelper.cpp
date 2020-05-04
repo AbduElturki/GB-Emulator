@@ -397,3 +397,31 @@ void LR35902::ShiftLeft(uint8_t& reg)
     AF.low |= reg?0:0x80;
     machine_cycle = 2;
 }
+
+void LR35902::ShiftRightNoChange(uint8_t& reg)
+{
+    AF.low = (reg&0x1)?0x10:0;
+    reg = (reg & 0x80) | (reg >> 1);
+    AF.low |= reg?0:0x80;
+    machine_cycle = 2;
+}
+
+void LR35902::ShiftRight(uint8_t& reg)
+{
+    AF.low = (reg&0x1)?0x10:0;
+    reg = (reg >> 1);
+    AF.low |= reg?0:0x80;
+    machine_cycle = 2;
+}
+
+void LR35902::Swap(uint8_t& reg)
+{
+    AF.low = reg?0:0x80;
+    reg = ((reg&0xF0) >> 4) | ((reg&0xF) << 4);
+    machine_cycle = 2;
+}
+
+//Bit operator
+void LR35902::BitOperator(uint8_t& reg, int bit)
+{
+}
