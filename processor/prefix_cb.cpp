@@ -426,76 +426,91 @@ void LR35902::SRL_A()
 
 void LR35902::BIT_0_B()
 {
+    TestBit(BC.high, 0);
 }
 
 
 void LR35902::BIT_0_C()
 {
+    TestBit(BC.low, 0);
 }
 
 
 void LR35902::BIT_0_D()
 {
+    TestBit(DE.high, 0);
 }
 
 
 void LR35902::BIT_0_E()
 {
+    TestBit(DE.low, 0);
 }
 
 
 void LR35902::BIT_0_H()
 {
+    TestBit(HL.high, 0);
 }
 
 
 void LR35902::BIT_0_L()
 {
+    TestBit(HL.low, 0);
 }
 
 
 void LR35902::BIT_0__HL_()
 {
+    TestBit(HL.word, 0);
 }
 
 
 void LR35902::BIT_0_A()
 {
+    TestBit(AF.high, 0);
 }
 
 
 void LR35902::BIT_1_B()
 {
+    TestBit(BC.high, 1);
 }
 
 
 void LR35902::BIT_1_C()
 {
+    TestBit(BC.low, 1);
 }
 
 
 void LR35902::BIT_1_D()
 {
+    TestBit(DE.high, 1);
 }
 
 
 void LR35902::BIT_1_E()
 {
+    TestBit(DE.low, 1);
 }
 
 
 void LR35902::BIT_1_H()
 {
+    TestBit(HL.high, 1);
 }
 
 
 void LR35902::BIT_1_L()
 {
+    TestBit(HL.low, 1);
 }
 
 
 void LR35902::BIT_1__HL_()
 {
+    TestBit(HL.word, 1);
 }
 
 

@@ -93,8 +93,8 @@ void LR35902::JumpRelative(bool condition)
     {
         PC.word += (mmu->ReadWord(PC.word) + 1);
         machine_cycle = 3;
-    } 
-    else 
+    }
+    else
     {
         PC.word += 2;
         machine_cycle = 2;
@@ -107,8 +107,8 @@ void LR35902::Jump(bool condition)
     {
         PC.word = mmu->ReadWord(PC.word);
         machine_cycle = 4;
-    } 
-    else 
+    }
+    else
     {
         PC.word += 2;
         machine_cycle = 3;
@@ -185,11 +185,11 @@ void LR35902::DecrementRegister(uint16_t& reg)
 void LR35902::AddToHL(uint16_t reg)
 {
     //Zero flag unaffected
-    AF.low &= 0x80; 
-    //Half carry flag 
+    AF.low &= 0x80;
+    //Half carry flag
     AF.low |= (((HL.word&0xFFF) + (reg&0xFFF) & 0x1000) == 0x1000)?0x20:0;
     HL.word += reg;
-    //carry flag 
+    //carry flag
     AF.low |= (HL.word < reg)?0x10:0;
     machine_cycle = 2;
 }
@@ -422,6 +422,15 @@ void LR35902::Swap(uint8_t& reg)
 }
 
 //Bit operator
-void LR35902::BitOperator(uint8_t& reg, int bit)
+void LR35902::TestBit(uint8_t& reg, int bit)
 {
+    AF.low = 0x20 | (AF.low&0x10) | ((reg & (1 << bit)) << (7 - bit));
+    machine_cycle = 2;
+}
+
+void LR35902::TestBit(uint16_t& address, int bit)
+{
+    uint8_t nn = mmu->ReadByte(address);
+    AF.low = 0x20 | (AF.low&0x10) | ((nn & (1 << bit)) << (7 - bit));
+    machine_cycle = 4;
 }

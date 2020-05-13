@@ -37,8 +37,8 @@ private:
     uint8_t machine_cycle;
 
     typedef void (LR35902::*mapping)();
-    mapping instruct_map[256]; 
-    mapping cb_map[256]; 
+    mapping instruct_map[256];
+    mapping cb_map[256];
 
     void IncrementPC(uint8_t steps);
     void GetPC();
@@ -98,7 +98,8 @@ private:
     void Swap(uint8_t& reg);
 
     //Bit operations
-    void BitOperator(uint8_t& reg, int bit);
+    void TestBit(uint8_t& reg, int bit);
+    void TestBit(uint16_t& address, int bit);
 
     //Instruction set
     void NOP();
@@ -352,7 +353,7 @@ private:
 
     //Prefix CB
     //
-    
+
     void RLC_B();
     void RLC_C();
     void RLC_D();
