@@ -434,3 +434,29 @@ void LR35902::TestBit(uint16_t& address, int bit)
     AF.low = 0x20 | (AF.low&0x10) | ((nn & (1 << bit)) << (7 - bit));
     machine_cycle = 4;
 }
+
+void LR35902::ResetBit(uint8_t& reg, int bit)
+{
+    reg = reg & ~(1 << bit);
+    machine_cycle = 2;
+}
+
+void LR35902::ResetBit(uint16_t& address, int bit)
+{
+    uint8_t nn = mmu->ReadByte(address) & ~(1 << bit);
+    mmu->WriteByte(address, nn)
+    machine_cycle = 4;
+}
+
+void LR35902::SetBit(uint8_t& reg, int bit)
+{
+    reg = reg | (1 << bit);
+    machine_cycle = 2;
+}
+
+void LR35902::SetBit(uint16_t& address, int bit)
+{
+    uint8_t nn = mmu->ReadByte(address) | (1 << bit);
+    mmu->WriteByte(address, nn)
+    machine_cycle = 4;
+}

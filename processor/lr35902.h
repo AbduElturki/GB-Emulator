@@ -100,6 +100,10 @@ private:
     //Bit operations
     void TestBit(uint8_t& reg, int bit);
     void TestBit(uint16_t& address, int bit);
+    void ResetBit(uint8_t& reg, int bit);
+    void ResetBit(uint16_t& address, int bit);
+    void SetBit(uint8_t& reg, int bit);
+    void SetBit(uint16_t& address, int bit);
 
     //Instruction set
     void NOP();
